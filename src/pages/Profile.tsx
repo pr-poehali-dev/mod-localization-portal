@@ -142,8 +142,8 @@ function Profile() {
                       <SelectValue placeholder="Выберите игру" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="skyrim">Skyrim</SelectItem>
-                      <SelectItem value="witcher3">Ведьмак 3</SelectItem>
+                      <SelectItem value="skyrim">TES V SKYRIM</SelectItem>
+                      <SelectItem value="witcher3">The Witcher Wild Hunt</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -241,7 +241,7 @@ function Profile() {
                           <div className="flex-1">
                             <h4 className="font-semibold">{mod.title}</h4>
                             <p className="text-sm text-muted-foreground">
-                              {mod.game === 'skyrim' ? 'Skyrim' : 'Ведьмак 3'} • v{mod.version}
+                              {mod.game === 'skyrim' ? 'TES V SKYRIM' : 'The Witcher Wild Hunt'} • v{mod.version}
                             </p>
                           </div>
                           {getStatusBadge(mod.status)}

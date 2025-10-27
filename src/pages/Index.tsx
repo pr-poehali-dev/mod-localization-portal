@@ -169,7 +169,7 @@ function Index() {
             Русификация модов для RPG
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Крупнейшая база переводов для модов Skyrim и The Witcher 3. 
+            Крупнейшая база переводов для модов TES V SKYRIM и The Witcher Wild Hunt. 
             Качественная локализация от сообщества для сообщества.
           </p>
           <div className="flex gap-4 justify-center">
@@ -198,8 +198,8 @@ function Index() {
             <Tabs value={selectedGame} onValueChange={(v) => setSelectedGame(v as any)} className="w-full md:w-auto">
               <TabsList className="bg-card border border-border">
                 <TabsTrigger value="all">Все</TabsTrigger>
-                <TabsTrigger value="skyrim">Skyrim</TabsTrigger>
-                <TabsTrigger value="witcher3">Ведьмак 3</TabsTrigger>
+                <TabsTrigger value="skyrim">TES V SKYRIM</TabsTrigger>
+                <TabsTrigger value="witcher3">The Witcher Wild Hunt</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
@@ -214,7 +214,7 @@ function Index() {
                 <CardHeader>
                   <div className="flex items-start justify-between mb-2">
                     <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/50">
-                      {rus.game === 'skyrim' ? 'Skyrim' : 'Ведьмак 3'}
+                      {rus.game === 'skyrim' ? 'TES V SKYRIM' : 'The Witcher Wild Hunt'}
                     </Badge>
                     <span className="text-sm text-muted-foreground">v{rus.version}</span>
                   </div>
@@ -261,7 +261,7 @@ function Index() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Icon name="Swords" size={24} className="text-primary" />
-                  Skyrim
+                  TES V SKYRIM
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -288,7 +288,7 @@ function Index() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Icon name="Sword" size={24} className="text-primary" />
-                  Ведьмак 3
+                  The Witcher Wild Hunt
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
