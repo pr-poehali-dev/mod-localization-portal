@@ -169,8 +169,7 @@ function Index() {
             Русификация модов для RPG
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Крупнейшая база переводов для модов TES V SKYRIM и The Witcher Wild Hunt. 
-            Качественная локализация от сообщества для сообщества.
+            База переводов для модов TES V SKYRIM и The Witcher Wild Hunt.
           </p>
           <div className="flex gap-4 justify-center">
             <Button size="lg" className="bg-primary hover:bg-primary/90 glow-red-strong">
