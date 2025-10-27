@@ -50,7 +50,7 @@ function Index() {
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center glow-red">
                 <Icon name="Languages" className="text-primary-foreground" size={24} />
               </div>
-              <h1 className="text-2xl font-bold text-glow">RussMods</h1>
+              <h1 className="text-2xl font-bold text-glow">ruprojectgames</h1>
             </div>
             
             <nav className="hidden md:flex items-center gap-6">
@@ -341,7 +341,7 @@ function Index() {
 
       <footer className="border-t border-border mt-16 py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>© 2025 RussMods. Все права защищены.</p>
+          <p>© 2025 ruprojectgames. Все права защищены.</p>
           <p className="mt-2 text-sm">
             Сделано с ❤️ для русскоязычного комьюнити модеров
           </p>
