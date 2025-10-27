@@ -7,7 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import { useToast } from '@/hooks/use-toast';
 
 interface Russificator {
   id: number;
@@ -18,16 +20,35 @@ interface Russificator {
   date: string;
 }
 
+interface NewsPost {
+  id: number;
+  title: string;
+  content: string;
+  date: string;
+}
+
 const mockRussificators: Russificator[] = [];
 
 function Index() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState<'all' | 'skyrim' | 'witcher3'>('all');
   const [showAuthDialog, setShowAuthDialog] = useState(false);
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [news, setNews] = useState<NewsPost[]>([
+    {
+      id: 1,
+      title: 'Добро пожаловать на ruprojectgames!',
+      content: 'Запуск нового портала русификации для модов TES V SKYRIM и The Witcher Wild Hunt. Скоро здесь появятся первые переводы!',
+      date: '27 октября 2025'
+    }
+  ]);
+  const [showNewsDialog, setShowNewsDialog] = useState(false);
+  const [editingNews, setEditingNews] = useState<NewsPost | null>(null);
+  const [newsForm, setNewsForm] = useState({ title: '', content: '' });
 
   const filteredRussificators = mockRussificators.filter(rus => {
     const matchesSearch = rus.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -43,6 +64,43 @@ function Index() {
     setIsLoggedIn(true);
     setIsAdmin(isAdminUser);
     setShowAuthDialog(false);
+  };
+
+  const handleNewsSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editingNews) {
+      setNews(news.map(n => n.id === editingNews.id ? { ...n, title: newsForm.title, content: newsForm.content } : n));
+      toast({ title: 'Новость обновлена', description: 'Изменения успешно сохранены' });
+    } else {
+      const newPost: NewsPost = {
+        id: Date.now(),
+        title: newsForm.title,
+        content: newsForm.content,
+        date: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+      };
+      setNews([newPost, ...news]);
+      toast({ title: 'Новость добавлена', description: 'Новая запись опубликована' });
+    }
+    setNewsForm({ title: '', content: '' });
+    setEditingNews(null);
+    setShowNewsDialog(false);
+  };
+
+  const handleEditNews = (post: NewsPost) => {
+    setEditingNews(post);
+    setNewsForm({ title: post.title, content: post.content });
+    setShowNewsDialog(true);
+  };
+
+  const handleDeleteNews = (id: number) => {
+    setNews(news.filter(n => n.id !== id));
+    toast({ title: 'Новость удалена', description: 'Запись успешно удалена' });
+  };
+
+  const handleAddNews = () => {
+    setEditingNews(null);
+    setNewsForm({ title: '', content: '' });
+    setShowNewsDialog(true);
   };
 
   return (
@@ -319,38 +377,92 @@ function Index() {
         </section>
 
         <section id="news">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold mb-2">Новости</h2>
-            <p className="text-muted-foreground">Последние обновления и анонсы</p>
+          <div className="mb-8 flex items-center justify-between">
+            <div>
+              <h2 className="text-3xl font-bold mb-2">Новости</h2>
+              <p className="text-muted-foreground">Последние обновления и анонсы</p>
+            </div>
+            {isAdmin && (
+              <Button onClick={handleAddNews} className="bg-primary hover:bg-primary/90 glow-red">
+                <Icon name="Plus" size={18} className="mr-2" />
+                Добавить новость
+              </Button>
+            )}
           </div>
           
           <div className="space-y-4">
-            <Card className="bg-card border-border">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-xl mb-2">Добро пожаловать на ruprojectgames!</CardTitle>
-                    <CardDescription className="flex items-center gap-2">
-                      <Icon name="Calendar" size={14} />
-                      27 октября 2025
-                    </CardDescription>
+            {news.map((post) => (
+              <Card key={post.id} className="bg-card border-border">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <CardTitle className="text-xl mb-2">{post.title}</CardTitle>
+                      <CardDescription className="flex items-center gap-2">
+                        <Icon name="Calendar" size={14} />
+                        {post.date}
+                      </CardDescription>
+                    </div>
+                    {isAdmin && (
+                      <div className="flex gap-2">
+                        <Button size="sm" variant="ghost" onClick={() => handleEditNews(post)}>
+                          <Icon name="Pencil" size={16} />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => handleDeleteNews(post.id)}>
+                          <Icon name="Trash2" size={16} className="text-destructive" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  {isAdmin && (
-                    <Button size="sm" variant="ghost">
-                      <Icon name="Pencil" size={16} />
-                    </Button>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  Запуск нового портала русификации для модов TES V SKYRIM и The Witcher Wild Hunt. 
-                  Скоро здесь появятся первые переводы!
-                </p>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {post.content}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </section>
+
+        <Dialog open={showNewsDialog} onOpenChange={setShowNewsDialog}>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle className="text-2xl">
+                {editingNews ? 'Редактировать новость' : 'Добавить новость'}
+              </DialogTitle>
+              <DialogDescription>
+                Заполните информацию о новости
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleNewsSubmit} className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <Label htmlFor="news-title">Заголовок *</Label>
+                <Input
+                  id="news-title"
+                  placeholder="Название новости"
+                  value={newsForm.title}
+                  onChange={(e) => setNewsForm({ ...newsForm, title: e.target.value })}
+                  className="bg-secondary border-border"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="news-content">Содержание *</Label>
+                <Textarea
+                  id="news-content"
+                  placeholder="Текст новости..."
+                  value={newsForm.content}
+                  onChange={(e) => setNewsForm({ ...newsForm, content: e.target.value })}
+                  className="bg-secondary border-border min-h-[150px]"
+                  required
+                />
+              </div>
+              <Button type="submit" className="w-full bg-primary hover:bg-primary/90 glow-red">
+                {editingNews ? 'Сохранить изменения' : 'Опубликовать'}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
       </main>
 
       <footer className="border-t border-border mt-16 py-8">
