@@ -13,67 +13,11 @@ interface Russificator {
   title: string;
   game: 'skyrim' | 'witcher3';
   author: string;
-  downloads: number;
   version: string;
   date: string;
 }
 
-const mockRussificators: Russificator[] = [
-  {
-    id: 1,
-    title: 'Immersive Armors - Полный перевод',
-    game: 'skyrim',
-    author: 'Drakonov',
-    downloads: 15420,
-    version: '8.1',
-    date: '2025-10-15'
-  },
-  {
-    id: 2,
-    title: 'Legacy of the Dragonborn - Русификация',
-    game: 'skyrim',
-    author: 'VladimirRus',
-    downloads: 23100,
-    version: '5.6',
-    date: '2025-10-20'
-  },
-  {
-    id: 3,
-    title: 'Hearts of Stone - Улучшенный перевод',
-    game: 'witcher3',
-    author: 'GeraltTranslator',
-    downloads: 18900,
-    version: '2.0',
-    date: '2025-10-18'
-  },
-  {
-    id: 4,
-    title: 'Blood and Wine - Альтернативный перевод',
-    game: 'witcher3',
-    author: 'WhiteWolfTeam',
-    downloads: 12500,
-    version: '1.5',
-    date: '2025-10-10'
-  },
-  {
-    id: 5,
-    title: 'Beyond Skyrim: Bruma - Русский перевод',
-    game: 'skyrim',
-    author: 'Cyrodiil_RU',
-    downloads: 31200,
-    version: '1.7',
-    date: '2025-10-22'
-  },
-  {
-    id: 6,
-    title: 'Новые квесты Скеллиге - Перевод',
-    game: 'witcher3',
-    author: 'SkelligeTeam',
-    downloads: 9800,
-    version: '1.0',
-    date: '2025-10-05'
-  }
-];
+const mockRussificators: Russificator[] = [];
 
 function Index() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -278,10 +222,6 @@ function Index() {
                 <CardContent>
                   <div className="flex items-center justify-between mb-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <Icon name="Download" size={16} />
-                      <span>{rus.downloads.toLocaleString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
                       <Icon name="Calendar" size={16} />
                       <span>{new Date(rus.date).toLocaleDateString('ru-RU')}</span>
                     </div>
@@ -297,9 +237,12 @@ function Index() {
 
           {filteredRussificators.length === 0 && (
             <div className="text-center py-12">
-              <Icon name="Search" size={48} className="mx-auto mb-4 text-muted-foreground" />
-              <p className="text-xl text-muted-foreground">
-                Русификаторы не найдены. Попробуйте изменить поисковый запрос.
+              <Icon name="FolderOpen" size={48} className="mx-auto mb-4 text-muted-foreground" />
+              <p className="text-xl text-muted-foreground mb-2">
+                Русификаторы скоро появятся
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Здесь будут отображаться все доступные переводы модов
               </p>
             </div>
           )}
