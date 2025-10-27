@@ -1,0 +1,21 @@
+{
+  "tests": [
+    {
+      "name": "Missing email",
+      "method": "POST",
+      "path": "/",
+      "body": {},
+      "expectedStatus": 400,
+      "expectedBody": {
+        "error": "Email is required"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "OPTIONS request",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

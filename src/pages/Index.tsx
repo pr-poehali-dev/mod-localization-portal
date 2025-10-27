@@ -49,6 +49,10 @@ function Index() {
   const [showNewsDialog, setShowNewsDialog] = useState(false);
   const [editingNews, setEditingNews] = useState<NewsPost | null>(null);
   const [newsForm, setNewsForm] = useState({ title: '', content: '' });
+  const [showVerificationStep, setShowVerificationStep] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [sentCode, setSentCode] = useState('');
+  const [isLoadingVerification, setIsLoadingVerification] = useState(false);
 
   const filteredRussificators = mockRussificators.filter(rus => {
     const matchesSearch = rus.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -57,13 +61,48 @@ function Index() {
     return matchesSearch && matchesGame;
   });
 
-  const handleAuth = (e: React.FormEvent) => {
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailInput = (e.target as HTMLFormElement).email.value;
+    
+    if (authMode === 'register' && !showVerificationStep) {
+      setIsLoadingVerification(true);
+      try {
+        const response = await fetch('https://functions.poehali.dev/0e01834e-3292-44f3-be09-8736efd2cd47', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput })
+        });
+        const data = await response.json();
+        if (data.success) {
+          setSentCode(data.code);
+          setShowVerificationStep(true);
+          toast({ title: 'Код отправлен', description: 'Проверьте свою почту' });
+        } else {
+          toast({ title: 'Ошибка', description: 'Не удалось отправить код', variant: 'destructive' });
+        }
+      } catch (error) {
+        toast({ title: 'Ошибка', description: 'Проблема с подключением', variant: 'destructive' });
+      }
+      setIsLoadingVerification(false);
+      return;
+    }
+    
+    if (authMode === 'register' && showVerificationStep) {
+      if (verificationCode !== sentCode) {
+        toast({ title: 'Неверный код', description: 'Проверьте код из письма', variant: 'destructive' });
+        return;
+      }
+    }
+    
     const isAdminUser = emailInput === 'admin@ruprojectgames.com';
     setIsLoggedIn(true);
     setIsAdmin(isAdminUser);
     setShowAuthDialog(false);
+    setShowVerificationStep(false);
+    setVerificationCode('');
+    setSentCode('');
+    toast({ title: 'Добро пожаловать!', description: 'Вы успешно вошли' });
   };
 
   const handleNewsSubmit = (e: React.FormEvent) => {
@@ -159,40 +198,81 @@ function Index() {
                       </DialogDescription>
                     </DialogHeader>
                     <form onSubmit={handleAuth} className="space-y-4 mt-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input 
-                          id="email" 
-                          type="email" 
-                          placeholder="your@email.com"
-                          className="bg-secondary border-border"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="password">Пароль</Label>
-                        <Input 
-                          id="password" 
-                          type="password"
-                          placeholder="••••••••"
-                          className="bg-secondary border-border"
-                          required
-                        />
-                      </div>
-                      {authMode === 'register' && (
-                        <div className="space-y-2">
-                          <Label htmlFor="username">Имя пользователя</Label>
-                          <Input 
-                            id="username" 
-                            placeholder="Drakonov"
-                            className="bg-secondary border-border"
-                            required
-                          />
-                        </div>
+                      {!showVerificationStep ? (
+                        <>
+                          <div className="space-y-2">
+                            <Label htmlFor="email">Email</Label>
+                            <Input 
+                              id="email" 
+                              type="email" 
+                              placeholder="your@email.com"
+                              className="bg-secondary border-border"
+                              required
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor="password">Пароль</Label>
+                            <Input 
+                              id="password" 
+                              type="password"
+                              placeholder="••••••••"
+                              className="bg-secondary border-border"
+                              required
+                            />
+                          </div>
+                          {authMode === 'register' && (
+                            <div className="space-y-2">
+                              <Label htmlFor="username">Имя пользователя</Label>
+                              <Input 
+                                id="username" 
+                                placeholder="Drakonov"
+                                className="bg-secondary border-border"
+                                required
+                              />
+                            </div>
+                          )}
+                          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 glow-red" disabled={isLoadingVerification}>
+                            {isLoadingVerification ? (
+                              <>
+                                <Icon name="Loader2" size={18} className="mr-2 animate-spin" />
+                                Отправка...
+                              </>
+                            ) : (
+                              authMode === 'login' ? 'Войти' : 'Получить код'
+                            )}
+                          </Button>
+                        </>
+                      ) : (
+                        <>
+                          <div className="space-y-2">
+                            <Label htmlFor="verification-code">Код подтверждения</Label>
+                            <Input 
+                              id="verification-code" 
+                              type="text"
+                              placeholder="123456"
+                              maxLength={6}
+                              value={verificationCode}
+                              onChange={(e) => setVerificationCode(e.target.value)}
+                              className="bg-secondary border-border text-center text-2xl tracking-widest"
+                              required
+                            />
+                            <p className="text-xs text-muted-foreground">
+                              Введите 6-значный код из письма
+                            </p>
+                          </div>
+                          <Button type="submit" className="w-full bg-primary hover:bg-primary/90 glow-red">
+                            Подтвердить
+                          </Button>
+                          <Button 
+                            type="button" 
+                            variant="ghost" 
+                            className="w-full"
+                            onClick={() => setShowVerificationStep(false)}
+                          >
+                            Вернуться назад
+                          </Button>
+                        </>
                       )}
-                      <Button type="submit" className="w-full bg-primary hover:bg-primary/90 glow-red">
-                        {authMode === 'login' ? 'Войти' : 'Зарегистрироваться'}
-                      </Button>
                       <p className="text-center text-sm text-muted-foreground">
                         {authMode === 'login' ? (
                           <>
