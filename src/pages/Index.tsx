@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ interface Russificator {
 const mockRussificators: Russificator[] = [];
 
 function Index() {
+  const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState<'all' | 'skyrim' | 'witcher3'>('all');
@@ -61,7 +63,11 @@ function Index() {
             <div className="flex items-center gap-3">
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
-                  <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                  <Button 
+                    variant="outline" 
+                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    onClick={() => navigate('/profile')}
+                  >
                     <Icon name="User" size={18} className="mr-2" />
                     Профиль
                   </Button>
