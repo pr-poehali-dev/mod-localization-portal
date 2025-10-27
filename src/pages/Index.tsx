@@ -61,7 +61,7 @@ function Index() {
               <a href="#" className="text-foreground hover:text-primary transition-colors">Главная</a>
               <a href="#russificators" className="text-foreground hover:text-primary transition-colors">Русификаторы</a>
               <a href="#instructions" className="text-foreground hover:text-primary transition-colors">Инструкции</a>
-              <a href="#contacts" className="text-foreground hover:text-primary transition-colors">Контакты</a>
+              <a href="#news" className="text-foreground hover:text-primary transition-colors">Новости</a>
             </nav>
 
             <div className="flex items-center gap-3">
@@ -318,29 +318,38 @@ function Index() {
           </div>
         </section>
 
-        <section id="contacts" className="text-center">
-          <Card className="bg-card border-border max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle className="text-2xl">Связаться с нами</CardTitle>
-              <CardDescription>
-                Есть вопросы или предложения? Мы всегда на связи!
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Icon name="Mail" size={18} className="mr-2" />
-                Email
-              </Button>
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Icon name="MessageCircle" size={18} className="mr-2" />
-                Discord
-              </Button>
-              <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-                <Icon name="Send" size={18} className="mr-2" />
-                Telegram
-              </Button>
-            </CardContent>
-          </Card>
+        <section id="news">
+          <div className="mb-8">
+            <h2 className="text-3xl font-bold mb-2">Новости</h2>
+            <p className="text-muted-foreground">Последние обновления и анонсы</p>
+          </div>
+          
+          <div className="space-y-4">
+            <Card className="bg-card border-border">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="text-xl mb-2">Добро пожаловать на ruprojectgames!</CardTitle>
+                    <CardDescription className="flex items-center gap-2">
+                      <Icon name="Calendar" size={14} />
+                      27 октября 2025
+                    </CardDescription>
+                  </div>
+                  {isAdmin && (
+                    <Button size="sm" variant="ghost">
+                      <Icon name="Pencil" size={16} />
+                    </Button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Запуск нового портала русификации для модов TES V SKYRIM и The Witcher Wild Hunt. 
+                  Скоро здесь появятся первые переводы!
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </section>
       </main>
 
