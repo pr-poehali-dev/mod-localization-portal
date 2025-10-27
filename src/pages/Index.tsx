@@ -23,6 +23,7 @@ const mockRussificators: Russificator[] = [];
 function Index() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGame, setSelectedGame] = useState<'all' | 'skyrim' | 'witcher3'>('all');
   const [showAuthDialog, setShowAuthDialog] = useState(false);
@@ -37,7 +38,10 @@ function Index() {
 
   const handleAuth = (e: React.FormEvent) => {
     e.preventDefault();
+    const emailInput = (e.target as HTMLFormElement).email.value;
+    const isAdminUser = emailInput === 'admin@ruprojectgames.com';
     setIsLoggedIn(true);
+    setIsAdmin(isAdminUser);
     setShowAuthDialog(false);
   };
 
@@ -63,15 +67,17 @@ function Index() {
             <div className="flex items-center gap-3">
               {isLoggedIn ? (
                 <div className="flex items-center gap-3">
-                  <Button 
-                    variant="outline" 
-                    className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
-                    onClick={() => navigate('/profile')}
-                  >
-                    <Icon name="User" size={18} className="mr-2" />
-                    Профиль
-                  </Button>
-                  <Button variant="ghost" onClick={() => setIsLoggedIn(false)}>
+                  {isAdmin && (
+                    <Button 
+                      variant="outline" 
+                      className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                      onClick={() => navigate('/profile')}
+                    >
+                      <Icon name="User" size={18} className="mr-2" />
+                      Админ-панель
+                    </Button>
+                  )}
+                  <Button variant="ghost" onClick={() => { setIsLoggedIn(false); setIsAdmin(false); }}>
                     <Icon name="LogOut" size={18} />
                   </Button>
                 </div>

@@ -96,8 +96,8 @@ function Profile() {
                 Главная
               </Button>
               <Button variant="outline" className="border-primary text-primary">
-                <Icon name="User" size={18} className="mr-2" />
-                Профиль
+                <Icon name="Shield" size={18} className="mr-2" />
+                Админ
               </Button>
             </div>
           </div>
@@ -106,8 +106,8 @@ function Profile() {
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-8">
-          <h2 className="text-3xl font-bold mb-2">Мой профиль</h2>
-          <p className="text-muted-foreground">Загружайте и управляйте своими русификаторами</p>
+          <h2 className="text-3xl font-bold mb-2">Админ-панель</h2>
+          <p className="text-muted-foreground">Загружайте и управляйте русификаторами</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
